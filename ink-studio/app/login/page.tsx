@@ -12,24 +12,33 @@ const router = useRouter();
 
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
+const [loading, setLoading] = useState(false);
 
 const handleLogin = async (e: React.FormEvent) => {
   e.preventDefault();
 
+  setLoading(true);
+
   try {
     await signInWithEmailAndPassword(auth, email, password);
     router.push("/dashboard");
-  } catch (error) {
-    alert("Erro ao fazer login. Verifique os dados.");
+  } catch (error: any) {
+    alert(error.message);
+  } finally {
+    setLoading(false);
   }
 };
 
 const handleGoogleLogin = async () => {
+  setLoading(true);
+
   try {
     await signInWithPopup(auth, googleProvider);
     router.push("/dashboard");
-  } catch (error) {
+  } catch (error: any) {
     alert("Erro ao entrar com Google");
+  } finally {
+    setLoading(false);
   }
 };
 
