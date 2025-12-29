@@ -5,6 +5,7 @@ import { useState } from "react";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../lib/firebase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
 
@@ -13,21 +14,38 @@ const router = useRouter();
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 const [loading, setLoading] = useState(false);
+const [erro, setErro] = useState("");
 
 const handleLogin = async (e: React.FormEvent) => {
   e.preventDefault();
 
-  setLoading(true);
+  setErro("");
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
     router.push("/dashboard");
-  } catch (error: any) {
-    alert(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  
+  } catch (err: any) {
+
+   console.log("LOGIN ERROR:", err.code); // debug
+
+        if (err.code === "auth/user-not-found") {
+          setErro("Usuário não encontrado. Verifique o e-mail ou crie uma conta.");
+        }
+        else if (err.code === "auth/wrong-password") {
+          setErro("Senha incorreta. Tente novamente.");
+        }
+        else if (err.code === "auth/invalid-credential") {
+          setErro("E-mail ou senha incorretos.");
+        }
+        else if (err.code === "auth/invalid-email") {
+          setErro("E-mail inválido.");
+        }
+        else {
+        setErro("Não foi possível fazer login. Tente novamente.");
+       } 
+     }
+   };
 
 const handleGoogleLogin = async () => {
   setLoading(true);
@@ -72,6 +90,12 @@ const handleGoogleLogin = async () => {
            onChange={(e) => setPassword(e.target.value)}
            className="w-full px-4 py-3 bg-black border border-neutral-700 rounded-lg"/>
 
+          {erro && (
+            <p className="text-red-400 text-sm text-center">
+          {erro}
+           </p>
+          )}
+
           <button
             type="submit"
             className="w-full py-3 rounded-lg bg-orange-500 hover:bg-orange-600 font-bold text-black transition">
@@ -94,9 +118,9 @@ const handleGoogleLogin = async () => {
           <a href="#" className="hover:text-orange-400">
             Esqueci a senha
           </a>
-          <a href="#" className="hover:text-orange-400">
+          <Link href="/register" className="hover:text-orange-400">
             Criar conta
-          </a>
+          </Link>
         </div>
       </div>
     </main>
