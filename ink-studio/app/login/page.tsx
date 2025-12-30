@@ -115,9 +115,9 @@ const handleGoogleLogin = async () => {
         </form>
 
         <div className="mt-6 text-sm flex justify-between text-neutral-400">
-          <a href="#" className="hover:text-orange-400">
+          <Link href="/esqueci-senha" className="hover:text-orange-400">
             Esqueci a senha
-          </a>
+          </Link>
           <Link href="/register" className="hover:text-orange-400">
             Criar conta
           </Link>
