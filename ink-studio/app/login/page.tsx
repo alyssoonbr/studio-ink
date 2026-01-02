@@ -6,6 +6,8 @@ import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../lib/firebase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../lib/firebase";
 
 export default function LoginPage() {
 
@@ -51,9 +53,28 @@ const handleGoogleLogin = async () => {
   setLoading(true);
 
   try {
-    await signInWithPopup(auth, googleProvider);
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+
+    // 🔎 verifica se já existe no Firestore
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
+
+    // 🟢 se não existir → cria como CLIENTE
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        uid: user.uid,
+        nome: user.displayName ?? "",
+        email: user.email ?? "",
+        telefone: "",
+        nascimento: "",
+        role: "cliente",
+        createdAt: new Date()
+      });
+    }
+
     router.push("/dashboard");
-  } catch (error: any) {
+  } catch (error) {
     alert("Erro ao entrar com Google");
   } finally {
     setLoading(false);

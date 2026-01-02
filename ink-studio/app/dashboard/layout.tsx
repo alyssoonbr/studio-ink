@@ -4,23 +4,37 @@ import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { db, auth } from "../lib/firebase";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [role, setRole] = useState<string | null>(null);
+  
+  const handleLogout = async () => {
+  await signOut(auth);
+  router.push("/login");
+};
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      if (!user) router.push("/login");
-    });
-    return () => unsub();
-  }, [router]);
+  const unsub = onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    router.push("/login");
-  };
+    const snap = await getDoc(doc(db, "users", user.uid));
+
+    if (snap.exists()) {
+      setRole(snap.data().role);
+      console.log("ROLE CARREGADA:", snap.data().role);
+    }
+  });
+  
+
+  return () => unsub();
+}, [router]);
 
   return (
     <div className="min-h-screen flex bg-black text-white">
@@ -38,7 +52,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </h2>
 
         <nav className="flex flex-col gap-4">
-            <Link
+           <Link
               href="/dashboard"
               onClick={() => setMenuOpen(false)}
               className="block hover:text-orange-400">
@@ -72,6 +86,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               className="block hover:text-orange-400">
               Chat 💬
              </Link>
+
+             {role === "admin" && (
+            <Link
+              href="/dashboard/admin/tatuagens"
+              onClick={() => setMenuOpen(false)}
+              className="block hover:text-orange-400"
+              >
+              Area Admin 🔧
+              </Link>
+              )}
+              
              <button
               onClick={handleLogout}
               className="mt-8 text-red-400 hover:text-red-500">
