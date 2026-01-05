@@ -17,7 +17,6 @@ export default function TatuagensAdminPage() {
   const [descricao, setDescricao] = useState("");
   const [mensagem, setMensagem] = useState("");
 
-  // 🔐 Garante que só usuário logado acesse
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
       if (!u) return;
@@ -26,7 +25,6 @@ export default function TatuagensAdminPage() {
     return () => unsub();
   }, []);
 
-  // 📌 Carrega lista de clientes da coleção "users"
   useEffect(() => {
     const carregarClientes = async () => {
       const q = query(collection(db, "users"), where("role", "==", "cliente"));
