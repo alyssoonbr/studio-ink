@@ -1,32 +1,49 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { db } from "../../lib/firebase";
+import { collection, getDocs } from "firebase/firestore";
+import Link from "next/link";
+
 export default function TatuadoresPage() {
-  const tatuadores = [
-    { nome: "Rafael", estilo: "Realismo", experiencia: "6 anos" },
-    { nome: "Bianca", estilo: "Fineline", experiencia: "3 anos" },
-    { nome: "Murilo", estilo: "Old School", experiencia: "4 anos" },
-  ];
+  const [tatuadores, setTatuadores] = useState<any[]>([]);
+
+  useEffect(() => {
+    const carregar = async () => {
+      const snap = await getDocs(collection(db, "tatuadores"));
+      const lista: any[] = [];
+      snap.forEach((d) => lista.push({ id: d.id, ...d.data() }));
+      setTatuadores(lista);
+    };
+
+    carregar();
+  }, []);
 
   return (
-    <div>
+    <main className="min-h-screen px-6 py-8 text-white">
       <h1 className="text-2xl font-bold text-orange-400 mb-4">
-        Tatuadores 🧑‍🎨
+        Tatuadores do Estúdio 🧑‍🎨
       </h1>
 
-      <p className="text-white/60 mb-6">
-        Conheça os artistas do Ink Studio.
-      </p>
-
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {tatuadores.map((t, i) => (
-          <div
-            key={i}
-            className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 hover:border-orange-500 transition"
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {tatuadores.map((t) => (
+          <Link
+            key={t.id}
+            href={`/dashboard/tatuadores/${t.id}`}
+            className="bg-neutral-900 border border-neutral-800 rounded-xl p-3 hover:border-orange-500 transition"
           >
+            {t.foto && (
+              <img
+                src={t.foto}
+                className="w-full h-40 object-cover rounded-lg mb-2"
+              />
+            )}
+
             <h2 className="text-lg font-bold text-orange-400">{t.nome}</h2>
-            <p className="text-white/70 mt-2">🎨 Estilo: {t.estilo}</p>
-            <p className="text-white/70 mt-1">⌛ Experiência: {t.experiencia}</p>
-          </div>
+            <p className="text-neutral-300 text-sm">{t.especialidade}</p>
+          </Link>
         ))}
       </div>
-    </div>
+    </main>
   );
 }
