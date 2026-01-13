@@ -41,7 +41,6 @@ export default function ForgotPasswordPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-black text-white p-6">
       <div className="w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-2xl p-6">
-
         <h1 className="text-2xl font-bold text-orange-400 mb-4 text-center">
           Recuperar senha
         </h1>
@@ -51,7 +50,6 @@ export default function ForgotPasswordPage() {
         </p>
 
         <form onSubmit={handleReset} className="space-y-3">
-
           <input
             type="email"
             placeholder="Seu e-mail"
@@ -62,7 +60,9 @@ export default function ForgotPasswordPage() {
           />
 
           {erro && <p className="text-red-400 text-sm text-center">{erro}</p>}
-          {mensagem && <p className="text-green-400 text-sm text-center">{mensagem}</p>}
+          {mensagem && (
+            <p className="text-green-400 text-sm text-center">{mensagem}</p>
+          )}
 
           <button
             type="submit"

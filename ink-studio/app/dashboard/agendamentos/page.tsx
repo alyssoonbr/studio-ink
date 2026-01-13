@@ -1,7 +1,12 @@
 export default function AgendamentosPage() {
   const agendamentos = [
     { cliente: "João", data: "20/02/2025", hora: "14:00", tatuador: "Rafael" },
-    { cliente: "Larissa", data: "22/02/2025", hora: "10:00", tatuador: "Bianca" },
+    {
+      cliente: "Larissa",
+      data: "22/02/2025",
+      hora: "10:00",
+      tatuador: "Bianca",
+    },
   ];
 
   return (
@@ -10,9 +15,7 @@ export default function AgendamentosPage() {
         Agendamentos 📅
       </h1>
 
-      <p className="text-white/60 mb-6">
-        Próximas sessões marcadas.
-      </p>
+      <p className="text-white/60 mb-6">Próximas sessões marcadas.</p>
 
       <div className="space-y-4">
         {agendamentos.map((a, i) => (
@@ -26,9 +29,7 @@ export default function AgendamentosPage() {
             <p className="text-white/70">
               📅 {a.data} — 🕒 {a.hora}
             </p>
-            <p className="text-white/70">
-              🧑‍🎨 Tatuador: {a.tatuador}
-            </p>
+            <p className="text-white/70">🧑‍🎨 Tatuador: {a.tatuador}</p>
           </div>
         ))}
       </div>

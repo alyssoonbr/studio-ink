@@ -30,17 +30,10 @@ export default function TatuadoresPage() {
           <Link
             key={t.id}
             href={`/dashboard/tatuadores/${t.id}`}
-            className="bg-neutral-900 border border-neutral-800 rounded-xl p-3 hover:border-orange-500 transition"
+            className="block bg-neutral-900 border border-neutral-800 rounded-xl p-4 hover:border-orange-500 transition"
           >
-            {t.foto && (
-              <img
-                src={t.foto}
-                className="w-full h-40 object-cover rounded-lg mb-2"
-              />
-            )}
-
-            <h2 className="text-lg font-bold text-orange-400">{t.nome}</h2>
-            <p className="text-neutral-300 text-sm">{t.especialidade}</p>
+            <h3 className="text-lg font-bold text-orange-400">{t.nome}</h3>
+            <p className="text-neutral-400 text-sm">{t.especialidade}</p>
           </Link>
         ))}
       </div>

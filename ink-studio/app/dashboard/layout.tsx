@@ -11,30 +11,29 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [role, setRole] = useState<string | null>(null);
-  
+
   const handleLogout = async () => {
-  await signOut(auth);
-  router.push("/login");
-};
+    await signOut(auth);
+    router.push("/login");
+  };
 
   useEffect(() => {
-  const unsub = onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        router.push("/login");
+        return;
+      }
 
-    const snap = await getDoc(doc(db, "users", user.uid));
+      const snap = await getDoc(doc(db, "users", user.uid));
 
-    if (snap.exists()) {
-      setRole(snap.data().role);
-      console.log("ROLE CARREGADA:", snap.data().role);
-    }
-  });
-  
+      if (snap.exists()) {
+        setRole(snap.data().role);
+        console.log("ROLE CARREGADA:", snap.data().role);
+      }
+    });
 
-  return () => unsub();
-}, [router]);
+    return () => unsub();
+  }, [router]);
 
   return (
     <div className="min-h-screen flex bg-black text-white">
@@ -47,62 +46,66 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           ${menuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
-        <h2 className="text-2xl font-bold text-orange-400 mb-8">
-          Ink Studio
-        </h2>
+        <h2 className="text-2xl font-bold text-orange-400 mb-8">Ink Studio</h2>
 
         <nav className="flex flex-col gap-4">
-           <Link
-              href="/dashboard"
-              onClick={() => setMenuOpen(false)}
-              className="block hover:text-orange-400">
-              Início🏠
-              </Link>
+          <Link
+            href="/dashboard"
+            onClick={() => setMenuOpen(false)}
+            className="block hover:text-orange-400"
+          >
+            Início🏠
+          </Link>
 
-            <Link
-              href="/dashboard/tatuadores"
-              onClick={() => setMenuOpen(false)}
-              className="block hover:text-orange-400">
-               Tatuadores 🧑‍🎨
-              </Link>
+          <Link
+            href="/dashboard/tatuadores"
+            onClick={() => setMenuOpen(false)}
+            className="block hover:text-orange-400"
+          >
+            Tatuadores 🧑‍🎨
+          </Link>
 
-            <Link
-              href="/dashboard/tatuagens"
-              onClick={() => setMenuOpen(false)}
-              className="block hover:text-orange-400">
-              Minhas Tatuagens 🖋️
-             </Link>
+          <Link
+            href="/dashboard/tatuagens"
+            onClick={() => setMenuOpen(false)}
+            className="block hover:text-orange-400"
+          >
+            Minhas Tatuagens 🖋️
+          </Link>
 
-            <Link
-              href="/dashboard/agendamentos"
-              onClick={() => setMenuOpen(false)}
-              className="block hover:text-orange-400">
-              Agendamentos   📅 
-             </Link>
+          <Link
+            href="/dashboard/agendamentos"
+            onClick={() => setMenuOpen(false)}
+            className="block hover:text-orange-400"
+          >
+            Agendamentos 📅
+          </Link>
 
-            <Link
-              href="/dashboard/chat"
-              onClick={() => setMenuOpen(false)}
-              className="block hover:text-orange-400">
-              Chat 💬
-             </Link>
+          <Link
+            href="/dashboard/chat"
+            onClick={() => setMenuOpen(false)}
+            className="block hover:text-orange-400"
+          >
+            Chat 💬
+          </Link>
 
-             {role === "admin" && (
+          {role === "admin" && (
             <Link
               href="/dashboard/admin/tatuagens"
               onClick={() => setMenuOpen(false)}
               className="block hover:text-orange-400"
-              >
-              Area Admin 🔧
-              </Link>
-              )}
-              
-             <button
-              onClick={handleLogout}
-              className="mt-8 text-red-400 hover:text-red-500">
-             Sair
-            </button>
-          </nav>
+            >
+              Cadastrar tatuagem 🔧
+            </Link>
+          )}
+
+          <button
+            onClick={handleLogout}
+            className="mt-8 text-red-400 hover:text-red-500"
+          >
+            Sair
+          </button>
+        </nav>
       </aside>
 
       {/* Overlay mobile */}
@@ -116,13 +119,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       {/* Main */}
       <main className="flex-1 p-4 md:p-8 overflow-x-hidden">
         {/* Header mobile */}
-      <header className="md:hidden mb-4 flex items-center justify-between">
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="px-3 py-2 border border-neutral-700 rounded-lg hover:border-orange-500 transition">
-          Menu 🧾
-        </button>
-     </header>
+        <header className="md:hidden mb-4 flex items-center justify-between">
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="px-3 py-2 border border-neutral-700 rounded-lg hover:border-orange-500 transition"
+          >
+            Menu 🧾
+          </button>
+        </header>
 
         {children}
       </main>
