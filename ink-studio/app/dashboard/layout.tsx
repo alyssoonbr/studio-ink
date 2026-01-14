@@ -99,6 +99,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </Link>
           )}
 
+          {role === "admin" && (
+            <Link
+              href="/dashboard/admin/agendamentos"
+              onClick={() => setMenuOpen(false)}
+              className="block hover:text-orange-400"
+            >
+              Confimar Agendamentos 🔔
+            </Link>
+          )}
+
           <button
             onClick={handleLogout}
             className="mt-8 text-red-400 hover:text-red-500"

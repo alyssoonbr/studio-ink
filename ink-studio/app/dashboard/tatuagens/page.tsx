@@ -8,6 +8,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 export default function MinhasTatuagensPage() {
   const [tatuagens, setTatuagens] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [imagemAberta, setImagemAberta] = useState<string | null>(null);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
@@ -51,8 +52,8 @@ export default function MinhasTatuagensPage() {
           >
             <img
               src={tattoo.fotoUrl}
-              alt={tattoo.titulo}
-              className="w-full h-52 object-cover rounded-lg mb-3"
+              className="w-full h-48 object-cover rounded-lg mb-2 cursor-pointer hover:opacity-80 transition"
+              onClick={() => setImagemAberta(tattoo.fotoUrl)}
             />
 
             <h2 className="text-lg font-bold text-orange-400">
@@ -60,7 +61,7 @@ export default function MinhasTatuagensPage() {
             </h2>
 
             <p className="text-sm text-neutral-300">
-              <b>Tatuador:</b> {tattoo.tatuador}
+              <b>Tatuador:</b> {tattoo.tatuadorNome}
             </p>
 
             <p className="text-sm text-neutral-300">
@@ -75,6 +76,18 @@ export default function MinhasTatuagensPage() {
           </div>
         ))}
       </div>
+
+      {imagemAberta && (
+        <div
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          onClick={() => setImagemAberta(null)}
+        >
+          <img
+            src={imagemAberta}
+            className="max-w-full max-h-full rounded-xl shadow-2xl"
+          />
+        </div>
+      )}
     </main>
   );
 }
